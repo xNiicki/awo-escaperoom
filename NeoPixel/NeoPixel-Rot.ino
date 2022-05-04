@@ -37,7 +37,7 @@ void setup() {
 }
 
 void loop() {
-       strip.fill(strip.Color(0, 255, 0 ));
+       strip.fill(strip.Color(255, 0, 0 ));
       strip.show();
 
 }

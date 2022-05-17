@@ -55,6 +55,6 @@
         strip.show();
         delay(c);
         if (c >100)
-          c = c - 1;
+          c = c - 5;
   
   }

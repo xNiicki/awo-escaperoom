@@ -100,23 +100,43 @@ void countdown() {
     }
     // show the Numbers 
     display.showNumberDecEx(seconds, 0, true, 2, 2);
-    display.showNumberDecEx(minutes, 0x80>>3, true, 2, 0) ;
+    display.showNumberDecEx(minutes, 0b01000000, true, 2, 0) ;
 
     q = q -1 ;
 
       q = 5;
        strip.fill( farben [j]);
         strip.show();
-        delay(500);
+        if (j == 0) {
+          strip.fill( farben [j]);
+          strip.show();
+          delay(1000);
+          j = j + 1 ;}
+          else {
+          strip.fill( farben [j]);
+          strip.show();
+            delay(250);
         j = j +1;
         if (j == 5)
           j = 0;
         strip.fill( farben [j]);
         strip.show();
-        delay(500);
+            delay(250);
         j = j +1;
         if (j == 5)
           j = 0;
+        strip.fill( farben [j]);
+          strip.show();
+            delay(250);
+        j = j +1;
+        if (j == 5)
+          j = 0;
+        strip.fill( farben [j]);
+        strip.show();
+            delay(250);
+        j = j +1;
+        if (j == 5)
+          j = 0;}
 
 
 
@@ -128,6 +148,39 @@ void countdown() {
 
     
 }
+
+
+
+
+
+
+void boombe() {
+
+   while (s == 0) {
+    strip.fill(strip.Color(0, 0, 0, 255));
+    strip.show();
+    delay(20);
+    strip.fill(strip.Color(0, 0, 0, 0));
+    strip.show();
+    delay(20);
+   }
+
+
+
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
 void displayText() {
   // see the word PLAY
   display.setSegments(PLAY);
@@ -158,4 +211,5 @@ void Neopixel() {
 
 void loop() { 
   countdown();
+  boombe();
 }

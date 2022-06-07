@@ -38,12 +38,25 @@ void countdown() {
     display.showNumberDecEx(seconds, 0, true, 2, 2);
     display.showNumberDecEx(minutes, 0x80>>3, true, 2, 0) ;
     delay(1000);
+         c = s - 1 ;
+      minutes = c / 60;
+      seconds = c % 60;
+     s = c;
+
+     // the timer stop at 0 
+    if( c <= 0){
+      c = 0;
+    }
+    // show the Numbers 
+    display.showNumberDecEx(seconds, 0, true, 2, 2);
+    display.showNumberDecEx(minutes, 0b01000000, true, 2, 0) ;
+    delay(1000);
 }
 void displayText() {
   // see the word PLAY
   display.setSegments(PLAY);
   delay(1000);
 }
-void loop() {
+void loop() { 
   countdown();
 }

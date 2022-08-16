@@ -12,7 +12,7 @@ const uint8_t PLAY[] = {B01110011, B00111000, B01011111, B01101110};
 // cCreate a display object, specifying parameters (Clock pin, Data pin)
 TM1637Display display (2, 3);
 long c = 0;
-long s = 901;
+long s = 5;
 
 void setup(){
 // Set brightness
@@ -20,7 +20,6 @@ display.setBrightness (0x0c) ;
 // Clear the display
 display.setSegments (OFF) ;
 // See the word PLAY 
-displayText();
 }
 
 void countdown() {
@@ -31,8 +30,8 @@ void countdown() {
      s = c;
 
      // the timer stop at 0 
-    if( c <= 0){
-      c = 0;
+    if( s <= 1){
+      s = 1;
     }
     // show the Numbers 
     display.showNumberDecEx(seconds, 0, true, 2, 2);
@@ -44,19 +43,32 @@ void countdown() {
      s = c;
 
      // the timer stop at 0 
-    if( c <= 0){
-      c = 0;
+    if( s <= 1){
+      s = 1;
     }
     // show the Numbers 
     display.showNumberDecEx(seconds, 0, true, 2, 2);
     display.showNumberDecEx(minutes, 0b01000000, true, 2, 0) ;
     delay(1000);
 }
-void displayText() {
-  // see the word PLAY
-  display.setSegments(PLAY);
-  delay(1000);
+
+void count() {
+  int m2 = 1000;
+  int ghg = 30;
+    if (millis() == m2) {
+  
+    int ghg3 = ghg / 60;
+    int ghg4 = ghg %60;
+  
+
+    display.showNumberDecEx(ghg4, 0, true, 2, 2);
+    display.showNumberDecEx(ghg3, 0x80>>3, true, 2, 0) ;
+    int suppe = m2 + 1000;
+    m2 = suppe;
+    ghg = ghg - 1;
+} 
 }
+
 void loop() { 
   countdown();
 }

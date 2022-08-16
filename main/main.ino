@@ -1,3 +1,5 @@
+#include <Adafruit_NeoPixel.h>
+
 // DEFINES
 // Macros to retrieve the fractional seconds and minute parts of a time
 // supplied in ms
@@ -37,7 +39,7 @@ int q;
   #define LED_COUNT  300
   
   // NeoPixel brightness, 0 (min) to 255 (max)
-  #define BRIGHTNESS 255
+  #define BRIGHTNESS 50p
   // Set BRIGHTNESS to about 1/5 (max = 255)
   
   // Declare our NeoPixel strip object:
@@ -84,10 +86,7 @@ displayText();
 }
 
 void countdown() {
-  // Math with the arduino to get the minutes and seconds
-     Serial.print(q);
-     Serial.print("   :   ");
-     Serial.println(j); 
+  // Math with the arduino to get the minutes and seconds 
      
      g = s - 1 ;
      int minutes = g / 60;
@@ -95,8 +94,8 @@ void countdown() {
      s = g;
 
      // the timer stop at 0 
-    if( g <= 0){
-      g = 0;
+    if( g <= 1){
+      g = 1;
     }
     // show the Numbers 
     display.showNumberDecEx(seconds, 0, true, 2, 2);
@@ -137,20 +136,12 @@ void countdown() {
         j = j +1;
         if (j == 5)
           j = 0;}
-
-
-
-    Serial.print(q);
-    Serial.print("   :   ");
-    Serial.println(j); 
-
+ 
+  Serial.println(g);
 
 
     
 }
-
-
-
 
 
 
@@ -163,22 +154,16 @@ void boombe() {
     strip.fill(strip.Color(0, 0, 0, 0));
     strip.show();
     delay(20);
+
+  
+    
    }
+
 
 
 
   
 }
-
-
-
-
-
-
-
-
-
-
 
 
 void displayText() {

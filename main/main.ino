@@ -1,5 +1,6 @@
 #include <Adafruit_NeoPixel.h>
 #include <TM1637Display.h>
+#include <ezButton.h>
 
 //display
 const uint8_t OFF[] = {0, 0, 0, 0};
@@ -12,13 +13,13 @@ TM1637Display display (
   #ifdef __AVR__
    #include <avr/power.h> 
   #endif
-  #define BRIGHTNESS   255
+  #define BRIGHTNESS   50
   #define LED_PIN     6
   #define LED_COUNT  300
   Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
 
   //variabel
-  int CountdownZeit = 1;
+  long CountdownZeit = 1;
   long Zeit = 900;
   uint32_t farben [0];
   int Numbers[5];
@@ -29,10 +30,13 @@ TM1637Display display (
   int bombeTrue = 0;
     long  minutes;
     long seconds;
-    int PrintWait = 1000;
+    long PrintWait = 1000;
     int NeopixelTrue = 0 ;
     long test = 5000;
-    int NeopixelPause = 0;
+    long NeopixelPause = 0;
+
+   //Buttons
+   ezButton button(7);
  
  
 
@@ -44,6 +48,7 @@ void setup(){
     strip.fill(strip.Color(0,0,0,255));
     strip.show();          
     strip.setBrightness(BRIGHTNESS);
+    button.setDebounceTime(50);
     pinMode(8, INPUT);
 }
 
@@ -56,7 +61,7 @@ void countdown() {
    seconds = CountdownZeit % 60;
   display.showNumberDecEx(seconds, 0, true, 2, 2);
   display.showNumberDecEx(minutes, 0x80>>3, true, 2, 0) ;  
-  if (CountdownZeit == -1)
+  if (CountdownZeit == 0)
     boombe();
   
 }
@@ -76,22 +81,21 @@ void boombe() {
 
 void number() {
      Numbers[0] = random(1,5);
-               Serial.println(Numbers[0]);
+               
      Numbers[1] = random(1,5);
      while(Numbers[1] == Numbers[0]) {
       Numbers[1] = random(1,5);
     }
-                   Serial.println(Numbers[1]);
+                 
     Numbers[2] = random(1,5);
     while(Numbers[2] == Numbers[0] || Numbers[2] == Numbers[1]) {
       Numbers[2] = random(1,5);
     }
-                   Serial.println(Numbers[2]);
+                 
      Numbers[3] = random(1,5);
       while(Numbers[3] == Numbers[0] || Numbers[3] == Numbers[1] || Numbers[3] == Numbers[2]) {
       Numbers[3] = random(1,5);
-    }               Serial.println(Numbers[3]);
-
+    }              
 
 
   NeopixelTrue = 1;
@@ -134,7 +138,6 @@ void Neopixel() {
       
     }
     numberr = numberr + 1;
-    Serial.println(numberr);
 
     NeopixelPause = millis() + 500;  }
 
@@ -172,9 +175,10 @@ void loop() {
   countdown();
   Prints();
 
-  if (millis() > test){
+  button.loop();
+
+  if (button.isPressed()){
     number();
-    test = 2147483647;
   }
 
 }

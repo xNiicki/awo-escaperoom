@@ -1,200 +1,180 @@
 #include <Adafruit_NeoPixel.h>
-
-// DEFINES
-// Macros to retrieve the fractional seconds and minute parts of a time
-// supplied in ms
-// INCLUDES
-// https://github.com/avishorp/TM1637
 #include <TM1637Display.h>
-// CONSTANTS
+
+//display
 const uint8_t OFF[] = {0, 0, 0, 0};
-// In this library, the byte order is .GFEDCBA
 const uint8_t PLAY[] = {B01110011, B00111000, B01011111, B01101110};
-// GLOBALS
-// cCreate a display object, specifying parameters (Clock pin, Data pin)
-TM1637Display display (2, 3);
-long g = 0;
-long s = 901;
-int a1 = 1000;
-uint32_t farben [4];
-
-int j;
-
-int q;
-
-
- // NeoPixel test program showing use of the WHITE channel for RGBW
-  // pixels only (won't look correct on regular RGB NeoPixel strips).
-  
-  #include <Adafruit_NeoPixel.h>
-  #ifdef __AVR__
-   #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
-  #endif
-  
-  // Which pin on the Arduino is connected to the NeoPixels?
-  // On a Trinket or Gemma we suggest changing this to 1:
-  #define LED_PIN     6
-  
-  // How many NeoPixels are attached to the Arduino?
-  #define LED_COUNT  300
-  
-  // NeoPixel brightness, 0 (min) to 255 (max)
-  #define BRIGHTNESS 50p
-  // Set BRIGHTNESS to about 1/5 (max = 255)
-  
-  // Declare our NeoPixel strip object:
-  Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
-  // Argument 1 = Number of pixels in NeoPixel strip
-  // Argument 2 = Arduino pin number (most are valid)
-  // Argument 3 = Pixel type flags, add together as needed:
-  //   NEO_KHZ800  800 KHz bitstream (most NeoPixel products w/WS2812 LEDs)
-  //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
-  //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
-  //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-  //   NEO_RGBW    Pixels are wired for RGBW bitstream (NeoPixel RGBW products)
-  int c;
-  
-  
-
-void setup(){
-// Set brightness
-display.setBrightness (0x0c) ;
-// Clear the display
-display.setSegments (OFF) ;
-// See the word PLAY 
-displayText();
+TM1637Display display (
+  3, 4);
 
 //neopixel
+  #include <Adafruit_NeoPixel.h>
+  #ifdef __AVR__
+   #include <avr/power.h> 
+  #endif
+  #define BRIGHTNESS   255
+  #define LED_PIN     6
+  #define LED_COUNT  300
+  Adafruit_NeoPixel strip(LED_COUNT, LED_PIN, NEO_GRBW + NEO_KHZ800);
 
-    // put your setup code here, to run once:
-    strip.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
-    strip.show();            // Turn OFF all pixels ASAP
+  //variabel
+  int CountdownZeit = 1;
+  long Zeit = 900;
+  uint32_t farben [0];
+  int Numbers[5];
+  int buttonState = 0;   
+  const int PAUSE = 500; 
+  long lastActionTime = -1; 
+  int numberr = 0;
+  int bombeTrue = 0;
+    long  minutes;
+    long seconds;
+    int PrintWait = 1000;
+    int NeopixelTrue = 0 ;
+    long test = 5000;
+    int NeopixelPause = 0;
+ 
+ 
+
+void setup(){
+    Serial.begin(9600);
+    display.setBrightness (0x0c) ;
+    display.setSegments (OFF) ;
+    strip.begin();     
+    strip.fill(strip.Color(0,0,0,255));
+    strip.show();          
     strip.setBrightness(BRIGHTNESS);
-    c = 500;
-
-  farben [0] = strip.Color(0, 0, 0, 255);
-  farben [1] = strip.Color(0, 0, 255 );
-  farben [2] = strip.Color(0, 255, 0 );
-  farben [3] = strip.Color(255, 0, 0 );
-  farben [4] = strip.Color(255, 0, 255 );
-
-  j = 0;
-
-  Serial.begin(9600);
-
-   q = 5;
+    pinMode(8, INPUT);
 }
 
 void countdown() {
-  // Math with the arduino to get the minutes and seconds 
-     
-     g = s - 1 ;
-     int minutes = g / 60;
-     int seconds = g % 60;
-     s = g;
 
-     // the timer stop at 0 
-    if( g <= 1){
-      g = 1;
-    }
-    // show the Numbers 
-    display.showNumberDecEx(seconds, 0, true, 2, 2);
-    display.showNumberDecEx(minutes, 0b01000000, true, 2, 0) ;
-
-    q = q -1 ;
-
-      q = 5;
-       strip.fill( farben [j]);
-        strip.show();
-        if (j == 0) {
-          strip.fill( farben [j]);
-          strip.show();
-          delay(1000);
-          j = j + 1 ;}
-          else {
-          strip.fill( farben [j]);
-          strip.show();
-            delay(250);
-        j = j +1;
-        if (j == 5)
-          j = 0;
-        strip.fill( farben [j]);
-        strip.show();
-            delay(250);
-        j = j +1;
-        if (j == 5)
-          j = 0;
-        strip.fill( farben [j]);
-          strip.show();
-            delay(250);
-        j = j +1;
-        if (j == 5)
-          j = 0;
-        strip.fill( farben [j]);
-        strip.show();
-            delay(250);
-        j = j +1;
-        if (j == 5)
-          j = 0;}
- 
-  Serial.println(g);
-
-
-    
+  long  milis = millis();
+  long  myTime = milis / 1000;
+  CountdownZeit = Zeit - myTime;
+    minutes = CountdownZeit / 60;
+   seconds = CountdownZeit % 60;
+  display.showNumberDecEx(seconds, 0, true, 2, 2);
+  display.showNumberDecEx(minutes, 0x80>>3, true, 2, 0) ;  
+  if (CountdownZeit == -1)
+    boombe();
+  
 }
 
 
-
 void boombe() {
-
-   while (s == 0) {
+   while (true) {
     strip.fill(strip.Color(0, 0, 0, 255));
     strip.show();
     delay(20);
     strip.fill(strip.Color(0, 0, 0, 0));
     strip.show();
     delay(20);
-
-  
-    
    }
-
-
-
-
-  
 }
 
 
-void displayText() {
-  // see the word PLAY
-  display.setSegments(PLAY);
-  delay(1000);
+void number() {
+     Numbers[0] = random(1,5);
+               Serial.println(Numbers[0]);
+     Numbers[1] = random(1,5);
+     while(Numbers[1] == Numbers[0]) {
+      Numbers[1] = random(1,5);
+    }
+                   Serial.println(Numbers[1]);
+    Numbers[2] = random(1,5);
+    while(Numbers[2] == Numbers[0] || Numbers[2] == Numbers[1]) {
+      Numbers[2] = random(1,5);
+    }
+                   Serial.println(Numbers[2]);
+     Numbers[3] = random(1,5);
+      while(Numbers[3] == Numbers[0] || Numbers[3] == Numbers[1] || Numbers[3] == Numbers[2]) {
+      Numbers[3] = random(1,5);
+    }               Serial.println(Numbers[3]);
+
+
+
+  NeopixelTrue = 1;
+   
+    
 }
 
 void Neopixel() {
-             strip.fill(strip.Color(0, 0, 0, 255));
+
+  if (NeopixelTrue == 1){
+
+
+  if(NeopixelPause<millis()){  
+
+
+     if (Numbers[numberr] == 1){
+        strip.fill(strip.Color(255,0,0));
         strip.show();
-        delay(2000);       
-         strip.fill(strip.Color(0, 0, 255 ));
+    } else if(Numbers[numberr] == 2) {
+        strip.fill(strip.Color(0,255,0));
         strip.show();
-        delay(c);
-          strip.fill(strip.Color(0, 255, 0 ));
+    }else if(Numbers[numberr] == 3) {
+        strip.fill(strip.Color(0,0,255));
         strip.show();
-        delay(c);
-          strip.fill(strip.Color(255, 0, 0 ));
+    }else if(Numbers[numberr] == 4) {
+        strip.fill(strip.Color(255,0,255));
         strip.show();
-        delay(c);
-           strip.fill(strip.Color(255, 0, 255 ));
-        strip.show();
-        delay(c);
-        if (c >100)
-          c = c - 5;
-          
-  
+    }
+    else if(numberr == 4) {
+      strip.fill(strip.Color(0,0,0, 255));
+      strip.show();
+    }
+    
+    if (numberr == 5){
+      numberr = 0 ;
+      NeopixelTrue = 0;
+      strip.fill(strip.Color(0,0,0, 255));
+      strip.show();
+          strip.setBrightness(BRIGHTNESS);
+      
+    }
+    numberr = numberr + 1;
+    Serial.println(numberr);
+
+    NeopixelPause = millis() + 500;  }
+
+    if (numberr == 5){
+      numberr = 0 ;
+      NeopixelTrue = 0;
+      strip.fill(strip.Color(0,0,0, 255));
+      strip.show();
+      
+    }
+
+
+  }  
 }
 
+
+void Prints(){
+    if (millis() > PrintWait) {
+      Serial.print(CountdownZeit);
+      Serial.print(";");
+          Serial.print(Numbers[0]);
+    Serial.print(Numbers[1]);
+    Serial.print(Numbers[2]);
+    Serial.println(Numbers[3]);
+      PrintWait = millis() + 1000;
+    }
+}
+
+
+
+
 void loop() { 
+  buttonState = digitalRead(8);
+  Neopixel();
   countdown();
-  boombe();
+  Prints();
+
+  if (millis() > test){
+    number();
+    test = 2147483647;
+  }
+
 }

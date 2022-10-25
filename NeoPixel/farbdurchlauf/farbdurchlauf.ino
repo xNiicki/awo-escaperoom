@@ -1,4 +1,4 @@
-  // NeoPixel test program showing use of the WHITE channel for RGBW
+    // NeoPixel test program showing use of the WHITE channel for RGBW
   // pixels only (won't look correct on regular RGB NeoPixel strips).
   
   #include <Adafruit_NeoPixel.h>

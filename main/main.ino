@@ -37,6 +37,7 @@ TM1637Display display (
     long test = 5000;
     long NeopixelPause = 0;
     int pressedNumber;
+    int RelayPin = 6;
 
   String code;
   int codeRun = 0;
@@ -86,9 +87,12 @@ void countdown() {
    seconds = CountdownZeit % 60;
   display.showNumberDecEx(seconds, 0, true, 2, 2);
   display.showNumberDecEx(minutes, 0x80>>3, true, 2, 0) ;  
-  if (CountdownZeit == 0)
+  if (CountdownZeit == 3)
+      digitalWrite(RelayPin, LOW);
+  if (CountdownZeit == 0) {
+	digitalWrite(RelayPin, HIGH);
     boombe();
-  
+  }
 }
 
 
